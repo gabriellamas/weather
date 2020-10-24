@@ -46,6 +46,9 @@ const Content = styled(Grid)`
     opacity: 0;
     animation: .5s fadeInRight;
     animation-fill-mode: forwards;
+
+    height: 76px;
+    box-sizing: content-box !important;
     
     &:nth-child(1) {
       animation-delay: 1.5s;
