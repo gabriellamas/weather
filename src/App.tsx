@@ -1,26 +1,63 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useContext, useCallback } from 'react';
+import { google } from 'helpers/requests';
+import UserCtx, { withUser } from 'contexts/user';
+import {
+  ForecastWeather
+} from 'compositions';
+import {
+  CurrentWeather,
+} from 'elements';
+import {
+  UserLocation,
+  LoadingLocation,
+} from 'components';
+import Main from 'templates/Main';
+import GlobalStyle from './GlobalStyle';
 
-function App() {
+const App = () => {
+  const user = useContext(UserCtx);
+
+  const getWeatherByGeolocation = useCallback(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async ({ coords }) => {
+          try {
+            const details = await google.getLocationDetails(coords.latitude, coords.longitude);
+            if (details.data.error_message) {
+              throw details.data.error_message;
+            }
+            const address = (
+              details.data.results.find(
+                (item: google.maps.GeocoderResult) => item.types.find(type => type === 'sublocality_level_1')
+              )
+            )?.formatted_address;
+            if (address) user.address.set(address);
+          } catch(e) {
+            console.error(e);
+          }
+          user.geolocation.set({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          });
+        },
+        () => user.geolocation.setError(true)
+      );
+    } else {
+      user.geolocation.setBrowserError(true);
+    }
+  }, [user]);
+
+  useEffect(getWeatherByGeolocation, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <Main>
+      <GlobalStyle />
+      <LoadingLocation />
+      <UserLocation />
+      <CurrentWeather />
+      <ForecastWeather />
+    </Main>
+  )
+};
 
-export default App;
+export default withUser(App);
