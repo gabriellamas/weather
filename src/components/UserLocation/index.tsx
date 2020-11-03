@@ -1,12 +1,7 @@
 import React, { useContext } from 'react';
 import { Typography } from '@material-ui/core';
-import styled from 'styled-components';
 import UserCtx from 'contexts/user';
-
-const Center = styled.div`
-  width: 100%;
-  text-align: center;
-`;
+import { Center } from './styles';
 
 const UserLocation = (): JSX.Element => {
   const { geolocation, address } = useContext(UserCtx);  

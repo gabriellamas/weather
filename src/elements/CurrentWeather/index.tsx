@@ -1,15 +1,8 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react';
-import styled from 'styled-components';
 import CountUp from 'react-countup';
-import { Typography } from '@material-ui/core';
 import UserCtx from 'contexts/user';
 import { openWeather } from 'helpers/requests';
-
-const Container = styled(Typography)`
-  text-align: center;
-  margin: 20px 0 !important;
-  height: 112px;
-`
+import { Container } from './styles';
 
 const CurrentWeather: React.FC = () => {
   const { geolocation } = useContext(UserCtx);

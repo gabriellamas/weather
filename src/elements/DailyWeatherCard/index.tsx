@@ -4,26 +4,7 @@ import {
   Grid,
   Typography
 } from '@material-ui/core';
-import styled from 'styled-components';
-
-const Content = styled(Grid)`
-  padding: 10px;
-  align-items: center;
-  justify-content: space-between;
-  .values {
-    display: flex;
-    text-align: center;
-    & > * {
-      margin: 0 15px;
-    }
-    .min {
-      opacity: 0.7;
-    }
-    .value {
-      font-size: 1.5rem;
-    }
-  }
-`;
+import { Content } from './styles';
 
 interface IProps {
   day: string,
